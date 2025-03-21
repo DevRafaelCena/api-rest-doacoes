@@ -2,9 +2,12 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import errorHandler from './middlewares/error';
 import routes from './routes/index.routes';
+import { setupSwagger } from './config/swagger';
 
 const app = express();
 dotenv.config();
+
+setupSwagger(app);
 
 app.use(express.json());
 app.use(routes);
@@ -22,7 +25,9 @@ app.use((req, res, next) => {
 
 // iniviando o servidor
 const PORT = process.env.PORT || 3000;
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`Documentação disponível em ${BASE_URL}/api-docs`);
 });
