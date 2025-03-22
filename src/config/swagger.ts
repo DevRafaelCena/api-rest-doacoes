@@ -2,6 +2,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Express } from 'express';
 import { healthDocs } from '../docs/healthDocs';
+import { authDocs } from '../docs/authDocs';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -20,10 +21,11 @@ const options: swaggerJsdoc.Options = {
       },
     ],
     paths: {
-      ...healthDocs, // Importando a documentação das rotas
+      ...healthDocs,
+      ...authDocs,
     },
   },
-  apis: [], // Removemos a necessidade de escanear arquivos de rota
+  apis: [],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
