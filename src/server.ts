@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import errorHandler from './middlewares/error';
 import routes from './routes/index.routes';
@@ -12,18 +12,17 @@ setupSwagger(app);
 app.use(express.json());
 app.use(routes);
 
-// Use o middleware como um manipulador global de erros
-app.use((err, req, res, next) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   errorHandler(err, req, res, next);
 });
 
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   return res.status(404).json({
     error: 'Not Found',
   });
 });
 
-// iniviando o servidor
+// Iniciando o servidor
 const PORT = process.env.PORT || 3000;
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 

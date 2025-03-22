@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "nodemon",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "node dist/server.js",
     "prod": "npm run build && npm run start",
     "lint": "eslint 'src/**/*.ts'",
@@ -44,6 +44,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.11",
     "typescript": "^5.8.2",
     "zod": "^3.22.4"
   }
