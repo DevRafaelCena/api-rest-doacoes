@@ -1,9 +1,9 @@
 import { Knex } from 'knex';
-import { IUser } from '@/interfaces/IUser';
 import UserEntity from '@/entities/user.entity';
+import { toCamelCase } from '@/utils/caseConverter';
 
 export interface IUserRepository {
-  findUser(username: string): Promise<IUser | undefined>;
+  findUser(username: string): Promise<UserEntity | undefined>;
 }
 
 export class UserRepository implements IUserRepository {
@@ -12,16 +12,15 @@ export class UserRepository implements IUserRepository {
 
   constructor(knex: Knex) {
     this.knex = knex;
-    this.tableName = 'user';
+    this.tableName = 'tb_user';
   }
 
-  async findUser(username: string): Promise<IUser | undefined> {
+  async findUser(username: string): Promise<UserEntity | undefined> {
     const user = await this.knex<UserEntity>(this.tableName)
       .select('*')
       .where('username', username)
-      .andWhere('ativo', 1)
       .first();
 
-    return user;
+    return user ? toCamelCase<UserEntity>(user) : undefined;
   }
 }
