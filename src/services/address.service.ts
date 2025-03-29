@@ -32,17 +32,19 @@ export class AddressService {
 
     if (!userRole) throw new AppError('User role not found', 404);
 
-    const address = new AddressEntity({
+    const addressEntity = new AddressEntity({
       id: userRole.addressId,
       ...data,
     });
 
+    let address;
+
     if (userRole.addressId) {
-      await this.addressRepository.updateAddress(address);
+      address = await this.addressRepository.updateAddress(addressEntity);
     } else {
-      if (!(await this.addressRepository.createAddress(address))) {
-        throw new AppError('Error creating address', 500);
-      }
+      address = await this.addressRepository.createAddress(addressEntity);
+
+      if (!address) throw new AppError('Address not created', 500);
     }
 
     return address;
