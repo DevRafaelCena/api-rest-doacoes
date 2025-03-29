@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
-import errorHandler from './middlewares/error';
+import { errorHandler } from './middlewares/errorHandler';
 import routes from './routes/index.routes';
 import { setupSwagger } from './config/swagger';
 
@@ -12,9 +12,7 @@ setupSwagger(app);
 app.use(express.json());
 app.use(routes);
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  errorHandler(err, req, res, next);
-});
+app.use(errorHandler);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   return res.status(404).json({

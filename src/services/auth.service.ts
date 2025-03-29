@@ -15,7 +15,7 @@ export class AuthService {
   ): Promise<{ token: string; refreshToken: string }> {
     const user = await this.userRepository.findUser(username);
 
-    if (!user) {
+    if (!user || !user.id) {
       throw new Error('Invalid username or password');
     }
 

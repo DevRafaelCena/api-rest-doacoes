@@ -1,8 +1,10 @@
 import { UserRole } from '@/enums/user-role';
 
-export interface IUser {
-  id?: number;
+export interface CreateUserDTO {
   username: string;
   password: string;
+  cnpj?: string;
+  cpf?: string;
+  name: string;
   role: UserRole;
 }
