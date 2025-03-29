@@ -22,9 +22,10 @@ export class AddressService {
     if (!user) throw new AppError('User not found', 404);
 
     const roleHandlers = {
-      [UserRole.DONOR]: () => this.donorRepository.findDonorByUserId(user.id),
-      [UserRole.TRANSPORTER]: () => this.transporterRepository.findTransporterByUserId(user.id),
-      [UserRole.ONG]: () => this.ongRepository.findOngByUserId(user.id),
+      [UserRole.DONOR]: () => this.donorRepository.findDonorByUserId(user.id as number),
+      [UserRole.TRANSPORTER]: () =>
+        this.transporterRepository.findTransporterByUserId(user.id as number),
+      [UserRole.ONG]: () => this.ongRepository.findOngByUserId(user.id as number),
     };
 
     const userRole = await roleHandlers[user.role]?.();

@@ -2,7 +2,7 @@ import { UserRole } from '@/enums/user-role';
 import { IUser } from '@/interfaces/IUser';
 
 export default class UserEntity implements IUser {
-  id: number;
+  id?: number;
   username: string;
   password: string;
   role: UserRole;
