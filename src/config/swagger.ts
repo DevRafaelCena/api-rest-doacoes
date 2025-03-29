@@ -4,6 +4,7 @@ import { Express } from 'express';
 import { healthDocs } from '../docs/healthDocs';
 import { authDocs } from '../docs/authDocs';
 import dotenv from 'dotenv';
+import { userDocs } from '@/docs/userDocs';
 dotenv.config();
 
 const options: swaggerJsdoc.Options = {
@@ -23,6 +24,7 @@ const options: swaggerJsdoc.Options = {
     paths: {
       ...healthDocs,
       ...authDocs,
+      ...userDocs,
     },
   },
   apis: [],
