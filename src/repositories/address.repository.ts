@@ -31,12 +31,16 @@ export class AddressRepository implements IAddressRepository {
   }
 
   async updateAddress(address: AddressEntity): Promise<AddressEntity> {
-    const [updatedAddress] = await this.knex<AddressEntity>(this.tableName)
+    await this.knex<AddressEntity>(this.tableName)
       .update(toSnakeCase(address))
-      .where('id', address.id)
-      .returning('*');
+      .where('id', address.id);
 
-    return toCamelCase<AddressEntity>(updatedAddress);
+    const addressUpdated = await this.knex<AddressEntity>(this.tableName)
+      .select('*')
+      .where('id', address.id)
+      .first();
+
+    return toCamelCase<AddressEntity>(addressUpdated);
   }
 
   async findAddressById(id: number): Promise<AddressEntity | undefined> {

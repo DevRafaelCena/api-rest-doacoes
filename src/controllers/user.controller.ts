@@ -18,6 +18,8 @@ export class UserController {
         cnpj: z.string().optional(),
         cpf: z.string().optional(),
         role: z.string(),
+        measure: z.string().optional(),
+        capacity: z.number().optional(),
       });
 
       const parsedData = createUserSchema.parse(req.body);

@@ -36,10 +36,12 @@ export class UserRepository implements IUserRepository {
   }
 
   async updateUser(user: UserEntity): Promise<UserEntity> {
-    const [updatedUser] = await this.knex<UserEntity>(this.tableName)
-      .update(toSnakeCase(user))
+    await this.knex<UserEntity>(this.tableName).update(toSnakeCase(user)).where('id', user.id);
+
+    const updatedUser = await this.knex<UserEntity>(this.tableName)
+      .select('*')
       .where('id', user.id)
-      .returning('*');
+      .first();
 
     return toCamelCase<UserEntity>(updatedUser);
   }

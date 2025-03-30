@@ -20,7 +20,12 @@ const ongRepository = new OngRepository(knex);
 const transporterRepository = new TransporterRepository(knex);
 const addressRepository = new AddressRepository(knex);
 
-const userService = new UserService(userRepository, donorRepository);
+const userService = new UserService(
+  userRepository,
+  donorRepository,
+  transporterRepository,
+  ongRepository,
+);
 const addressService = new AddressService(
   addressRepository,
   userRepository,

@@ -29,18 +29,27 @@ export class TransporterRepository implements ITransporterRepository {
   }
 
   async createTransporter(transporter: TransporterEntity): Promise<TransporterEntity> {
-    const [createdTransporter] = await this.knex<TransporterEntity>(this.tableName)
-      .insert(toSnakeCase(transporter))
-      .returning('*');
+    const [createdTransporter] = await this.knex<TransporterEntity>(this.tableName).insert(
+      toSnakeCase(transporter),
+    );
 
-    return toCamelCase<TransporterEntity>(createdTransporter);
+    const transporterCreated = await this.knex<TransporterEntity>(this.tableName)
+      .select('*')
+      .where('id', createdTransporter)
+      .first();
+
+    return toCamelCase<TransporterEntity>(transporterCreated);
   }
 
   async updateTransporter(transporter: TransporterEntity): Promise<TransporterEntity> {
-    const [updatedTransporter] = await this.knex<TransporterEntity>(this.tableName)
+    await this.knex<TransporterEntity>(this.tableName)
       .update(toSnakeCase(transporter))
+      .where('id', transporter.id);
+
+    const updatedTransporter = await this.knex<TransporterEntity>(this.tableName)
+      .select('*')
       .where('id', transporter.id)
-      .returning('*');
+      .first();
 
     return toCamelCase<TransporterEntity>(updatedTransporter);
   }

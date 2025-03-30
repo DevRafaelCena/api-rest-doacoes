@@ -7,4 +7,6 @@ export interface CreateUserDTO {
   cpf?: string;
   name: string;
   role: UserRole;
+  measure?: string;
+  capacity?: number;
 }

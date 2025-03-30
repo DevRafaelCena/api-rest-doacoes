@@ -26,20 +26,31 @@ export class OngRepository implements IOngRepository {
   }
 
   async createOng(ong: OngEntity): Promise<OngEntity> {
-    const [createdOng] = await this.knex<OngEntity>(this.tableName)
-      .insert(toSnakeCase(ong))
-      .returning('*');
+    const [createdOng] = await this.knex<OngEntity>(this.tableName).insert(toSnakeCase(ong));
 
-    return toCamelCase<OngEntity>(createdOng);
+    if (!createdOng) {
+      throw new Error('Error creating ONG');
+    }
+
+    const id = createdOng as number;
+
+    const ongCreated = await this.knex<OngEntity>(this.tableName)
+      .select('*')
+      .where('id', id)
+      .first();
+
+    return toCamelCase<OngEntity>(ongCreated);
   }
 
   async updateOng(ong: OngEntity): Promise<OngEntity> {
-    const [updatedOng] = await this.knex<OngEntity>(this.tableName)
-      .update(toSnakeCase(ong))
-      .where('id', ong.id)
-      .returning('*');
+    await this.knex<OngEntity>(this.tableName).update(toSnakeCase(ong)).where('id', ong.id);
 
-    return toCamelCase<OngEntity>(updatedOng);
+    const ongUpdated = await this.knex<OngEntity>(this.tableName)
+      .select('*')
+      .where('id', ong.id)
+      .first();
+
+    return toCamelCase<OngEntity>(ongUpdated);
   }
 
   async findOngById(id: number): Promise<OngEntity | undefined> {

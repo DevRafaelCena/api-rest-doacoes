@@ -29,18 +29,23 @@ export class DonorRepository implements IDonorRepository {
   }
 
   async createDonor(donor: DonorEntity): Promise<DonorEntity> {
-    const [createdUser] = await this.knex<DonorEntity>(this.tableName)
-      .insert(toSnakeCase(donor))
-      .returning('*');
+    const [createdUser] = await this.knex<DonorEntity>(this.tableName).insert(toSnakeCase(donor));
 
-    return toCamelCase<DonorEntity>(createdUser);
+    const donorCreated = await this.knex<DonorEntity>(this.tableName)
+      .select('*')
+      .where('id', createdUser)
+      .first();
+
+    return toCamelCase<DonorEntity>(donorCreated);
   }
 
   async updateDonor(donor: DonorEntity): Promise<DonorEntity> {
-    const [updatedUser] = await this.knex<DonorEntity>(this.tableName)
-      .update(toSnakeCase(donor))
+    await this.knex<DonorEntity>(this.tableName).update(toSnakeCase(donor)).where('id', donor.id);
+
+    const updatedUser = await this.knex<DonorEntity>(this.tableName)
+      .select('*')
       .where('id', donor.id)
-      .returning('*');
+      .first();
 
     return toCamelCase<DonorEntity>(updatedUser);
   }
