@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { AddressUseCase } from '@/useCases/address.usecase';
 import { z } from 'zod';
-import { sanitizeCep } from '@/utils/stringSanitize';
+import { sanitize } from '@/utils/stringSanitize';
 
 export class AdressController {
   constructor(private readonly addressUseCase: AddressUseCase) {}
@@ -22,7 +22,7 @@ export class AdressController {
 
       const { cep } = parsedData;
 
-      const sanitizedCep = sanitizeCep(cep);
+      const sanitizedCep = sanitize(cep);
 
       parsedData.cep = sanitizedCep;
 

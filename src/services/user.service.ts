@@ -33,7 +33,7 @@ export class UserService {
 
     const userId = newUser.id as number;
 
-    return this.createUserRoleEntity(data, userId);
+    return await this.createUserRoleEntity(data, userId);
   }
 
   private async createUser(data: CreateUserDTO, password: string) {
@@ -73,7 +73,7 @@ export class UserService {
   }
 
   private async createTransporter(data: CreateUserDTO, userId: number) {
-    if (!data.cpf || !data.cnpj) {
+    if (!data.cpf && !data.cnpj) {
       throw new AppError('CPF or CNPJ is required for Transporter role', 422);
     }
     if (!data.measure || !data.capacity) {
@@ -82,6 +82,7 @@ export class UserService {
 
     const transporter = new TransporterEntity({
       cpf: data.cpf,
+      cnpj: data.cnpj,
       name: data.name,
       userId,
       measure: data.measure,
