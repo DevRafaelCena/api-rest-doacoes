@@ -3,8 +3,9 @@ import swaggerUi from 'swagger-ui-express';
 import { Express } from 'express';
 import { healthDocs } from '../docs/healthDocs';
 import { authDocs } from '../docs/authDocs';
-import dotenv from 'dotenv';
 import { userDocs } from '@/docs/userDocs';
+import { productDocs } from '@/docs/productDocs';
+import dotenv from 'dotenv';
 dotenv.config();
 
 const options: swaggerJsdoc.Options = {
@@ -25,6 +26,7 @@ const options: swaggerJsdoc.Options = {
       ...healthDocs,
       ...authDocs,
       ...userDocs,
+      ...productDocs,
     },
   },
   apis: [],

@@ -1,4 +1,4 @@
-import { ITransporter } from '@/interfaces/Itransporter';
+import { ITransporter } from '@/interfaces/ITransporter';
 
 export default class TransporterEntity implements ITransporter {
   id?: number;
