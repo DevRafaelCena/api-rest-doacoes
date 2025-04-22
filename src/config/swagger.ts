@@ -5,6 +5,7 @@ import { healthDocs } from '../docs/healthDocs';
 import { authDocs } from '../docs/authDocs';
 import { userDocs } from '@/docs/userDocs';
 import { productDocs } from '@/docs/productDocs';
+import { donationDocs } from '@/docs/donationDocs';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -27,6 +28,7 @@ const options: swaggerJsdoc.Options = {
       ...authDocs,
       ...userDocs,
       ...productDocs,
+      ...donationDocs,
     },
   },
   apis: [],
