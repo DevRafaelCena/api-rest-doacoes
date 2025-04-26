@@ -5,6 +5,7 @@ import { ListProductsUseCase } from '@/useCases/product/listProducts.usecase';
 import { FindProductByIdUseCase } from '@/useCases/product/findProductById.usecase';
 import { ProductRepository } from '@/repositories/product.repository';
 import knex from '@/config/database';
+import { authenticateToken } from '@/middlewares/auth.middleware';
 
 const router = Router();
 
@@ -19,6 +20,8 @@ const productController = new ProductController(
   findProductByIdUseCase,
   productRepository,
 );
+
+router.use(authenticateToken);
 
 router.post('/', productController.create.bind(productController));
 
