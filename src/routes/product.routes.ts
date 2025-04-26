@@ -12,14 +12,19 @@ const productRepository = new ProductRepository(knex);
 const createProductUseCase = new CreateProductUseCase(productRepository);
 const listProductsUseCase = new ListProductsUseCase(productRepository);
 const findProductByIdUseCase = new FindProductByIdUseCase(productRepository);
+
 const productController = new ProductController(
   createProductUseCase,
   listProductsUseCase,
-  findProductByIdUseCase
+  findProductByIdUseCase,
+  productRepository,
 );
 
 router.post('/', productController.create.bind(productController));
 router.get('/', productController.list.bind(productController));
+
+router.get('/available', productController.listAvailableProducts.bind(productController));
+router.get('/details/:id', productController.getProductDetails.bind(productController));
 router.get('/:id', productController.findById.bind(productController));
 
-export const productRoutes = router; 
+export const productRoutes = router;
