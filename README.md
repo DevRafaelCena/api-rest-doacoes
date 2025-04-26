@@ -1,43 +1,72 @@
-# API de Doações
+# 🎁 API REST de Doações
 
-Esta é a API de um sistema de doações que conecta **ONGs, doadores e transportadores**.  
-A aplicação é construída em **Node.js** com **TypeScript** e utiliza **Swagger** para documentação.
+## 📝 Descrição
+API REST desenvolvida para conectar e gerenciar doações entre diferentes atores da sociedade. O sistema permite:
+- 👨‍🌾 Cadastro de doadores/produtores e seus produtos disponíveis para doação
+- 🏢 Registro de ONGs que necessitam de doações
+- 🚚 Cadastro de transportadores para realizar a logística das doações
+- 🤝 Match automático entre doadores, ONGs e transportadores
+- 📦 Gerenciamento de doações e controle de quantidades
+- 📊 Acompanhamento do status das doações
+- 🔍 Busca de produtos por categoria e título
+- 👥 Gerenciamento de doadores e ONGs
 
-## 🚀 Tecnologias
+## 🚀 Como executar localmente
 
-- **Node.js** + **TypeScript**
-- **Express.js** (Framework para API)
-- **Swagger** (Documentação)
-- **ESLint & Prettier** (Padronização de código)
-- **Nodemon** (Ambiente de desenvolvimento)
+### Pré-requisitos
+- Node.js (versão 14 ou superior)
+- npm ou yarn
+- Banco de dados PostgreSQL
 
-## 📦 Instalação
+### Passos para execução
 
-1. Clone este repositório:
-   ```sh
-   git clone https://github.com/seu-usuario/sua-api-doacoes.git
-   cd sua-api-doacoes
-   ```
+1. Clone o repositório:
+```bash
+git clone [URL_DO_REPOSITÓRIO]
+cd api-rest-doacoes
+```
+
 2. Instale as dependências:
-   ```sh
-   npm install
-   ```
+```bash
+npm install
+# ou
+yarn install
+```
+
 3. Configure as variáveis de ambiente:
-   projeto utiliza variáveis de ambiente para configurar detalhes como o banco de dados, a porta da aplicação, entre outros.
-   Crie um arquivo .env na raiz do projeto e adicione as configurações necessárias encontradas no env.example.
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=seu_usuario
+DB_PASSWORD=sua_senha
+DB_NAME=nome_do_banco
+PORT=3000
+```
 
-## ▶️ Como Rodar
+4. Execute as migrações do banco de dados:
+```bash
+npm run migrate
+# ou
+yarn migrate
+```
 
-### Ambiente de Desenvolvimento
-
-Para rodar a aplicação em ambiente de desenvolvimento, utilize o comando:
-
+5. Inicie o servidor:
 ```bash
 npm run dev
+# ou
+yarn dev
 ```
 
-1. **Build**: Para compilar os arquivos TypeScript para JavaScript:
+O servidor estará rodando em `http://localhost:3000`
 
-```bash
-   npm run build
-```
+## 📚 Documentação da API
+A documentação completa da API estará disponível em `http://localhost:3000/api-docs` quando o servidor estiver em execução.
+
+## 🛠️ Tecnologias utilizadas
+- Node.js
+- TypeScript
+- Express
+- Knex.js
+- PostgreSQL
+- Jest (para testes)
