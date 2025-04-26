@@ -7,6 +7,7 @@ export interface IProduct {
   title: string;
   description?: string;
   quantity: number;
+  unavailableQuantity: number;
   measure: Measure;
   registeredAt?: Date;
   available?: number;

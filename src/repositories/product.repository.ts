@@ -1,14 +1,18 @@
 import { Knex } from 'knex';
-import ProductEntity from '@/entities/product.entity';
 import { toCamelCase, toSnakeCase } from '@/utils/caseConverter';
+import { ProductEntity } from '@/entities/product.entity';
 
 export interface IProductRepository {
   createProduct(product: ProductEntity): Promise<ProductEntity>;
   updateProduct(product: ProductEntity): Promise<ProductEntity>;
   findProductById(id: number): Promise<ProductEntity | undefined>;
   findProductsByDonorId(donorId: number): Promise<ProductEntity[]>;
-  findAvailableProducts(filters?: { categoryId?: number; title?: string }): Promise<ProductEntity[]>;
+  findAvailableProducts(filters?: {
+    categoryId?: number;
+    title?: string;
+  }): Promise<ProductEntity[]>;
   deleteProduct(id: number): Promise<void>;
+  updateUnavailableQuantity(productId: number, quantity: number): Promise<void>;
 }
 
 export class ProductRepository implements IProductRepository {
@@ -21,8 +25,7 @@ export class ProductRepository implements IProductRepository {
   }
 
   async createProduct(product: ProductEntity): Promise<ProductEntity> {
-    const [id] = await this.knex<ProductEntity>(this.tableName)
-      .insert(toSnakeCase(product));
+    const [id] = await this.knex<ProductEntity>(this.tableName).insert(toSnakeCase(product));
 
     const createdProduct = await this.knex<ProductEntity>(this.tableName)
       .select('*')
@@ -59,13 +62,14 @@ export class ProductRepository implements IProductRepository {
       .select('*')
       .where('donor_id', donorId);
 
-    return products.map(product => toCamelCase<ProductEntity>(product));
+    return products.map((product) => toCamelCase<ProductEntity>(product));
   }
 
-  async findAvailableProducts(filters?: { categoryId?: number; title?: string }): Promise<ProductEntity[]> {
-    let query = this.knex<ProductEntity>(this.tableName)
-      .select('*')
-      .where('quantity', '>', 0);
+  async findAvailableProducts(filters?: {
+    categoryId?: number;
+    title?: string;
+  }): Promise<ProductEntity[]> {
+    let query = this.knex<ProductEntity>(this.tableName).select('*').where('quantity', '>', 0);
 
     if (filters?.categoryId) {
       query = query.where('category_id', filters.categoryId);
@@ -77,12 +81,18 @@ export class ProductRepository implements IProductRepository {
 
     const products = await query;
 
-    return products.map(product => toCamelCase<ProductEntity>(product));
+    return products.map((product) => toCamelCase<ProductEntity>(product));
   }
 
   async deleteProduct(id: number): Promise<void> {
-    await this.knex<ProductEntity>(this.tableName)
-      .where('id', id)
-      .delete();
+    await this.knex<ProductEntity>(this.tableName).where('id', id).delete();
   }
-} 
+
+  async updateUnavailableQuantity(productId: number, quantity: number): Promise<void> {
+    await this.knex<ProductEntity>(this.tableName)
+      .where('id', productId)
+      .update({
+        unavailable_quantity: this.knex.raw('unavailable_quantity + ?', [quantity]),
+      } as any);
+  }
+}

@@ -1,5 +1,5 @@
 import { IProductRepository } from '@/repositories/product.repository';
-import ProductEntity from '@/entities/product.entity';
+import { ProductEntity } from '@/entities/product.entity';
 
 export interface ListProductsFilters {
   categoryId?: number;
@@ -12,4 +12,4 @@ export class ListProductsUseCase {
   async execute(filters?: ListProductsFilters): Promise<ProductEntity[]> {
     return await this.productRepository.findAvailableProducts(filters);
   }
-} 
+}

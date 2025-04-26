@@ -1,5 +1,5 @@
 import { IProductRepository } from '@/repositories/product.repository';
-import ProductEntity from '@/entities/product.entity';
+import { ProductEntity } from '@/entities/product.entity';
 import { AppError } from '@/@errors/AppError';
 
 export class FindProductByIdUseCase {
@@ -14,4 +14,4 @@ export class FindProductByIdUseCase {
 
     return product;
   }
-} 
+}

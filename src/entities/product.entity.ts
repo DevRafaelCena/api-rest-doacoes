@@ -1,33 +1,30 @@
-import { IProduct } from '@/interfaces/IProduct';
 import { Measure } from '@/enums/measure.enum';
+import { IProduct } from '@/interfaces/IProduct';
 
-export default class ProductEntity implements IProduct {
+export class ProductEntity {
   id?: number;
   donorId: number;
   categoryId: number;
   title: string;
   description?: string;
   quantity: number;
+  unavailableQuantity: number;
   measure: Measure;
   registeredAt?: Date;
 
-  constructor({
-    id,
-    donorId,
-    categoryId,
-    title,
-    description,
-    quantity,
-    measure,
-    registeredAt
-  }: IProduct) {
-    this.id = id;
-    this.donorId = donorId;
-    this.categoryId = categoryId;
-    this.title = title;
-    this.description = description;
-    this.quantity = quantity;
-    this.measure = measure;
-    this.registeredAt = registeredAt || new Date();
+  constructor(product: IProduct) {
+    this.id = product.id;
+    this.donorId = product.donorId;
+    this.categoryId = product.categoryId;
+    this.title = product.title;
+    this.description = product.description;
+    this.quantity = product.quantity;
+    this.unavailableQuantity = product.unavailableQuantity || 0;
+    this.measure = product.measure;
+    this.registeredAt = product.registeredAt;
+  }
+
+  get availableQuantity(): number {
+    return this.quantity - this.unavailableQuantity;
   }
 }
