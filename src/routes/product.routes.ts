@@ -21,10 +21,13 @@ const productController = new ProductController(
 );
 
 router.post('/', productController.create.bind(productController));
+
 router.get('/', productController.list.bind(productController));
 
 router.get('/available', productController.listAvailableProducts.bind(productController));
 router.get('/details/:id', productController.getProductDetails.bind(productController));
 router.get('/:id', productController.findById.bind(productController));
+
+router.get('/donor/:donorId', productController.getDonorProducts.bind(productController));
 
 export const productRoutes = router;

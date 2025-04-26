@@ -139,5 +139,76 @@ export const donationDocs = {
         }
       }
     }
+  },
+  '/donations/requests': {
+    get: {
+      summary: 'Lista solicitações de doação',
+      tags: ['Donation'],
+      parameters: [
+        {
+          in: 'query',
+          name: 'donorId',
+          schema: { type: 'number' },
+          description: 'ID do doador para filtrar as solicitações',
+          required: false
+        },
+        {
+          in: 'query',
+          name: 'ongId',
+          schema: { type: 'number' },
+          description: 'ID da ONG para filtrar as solicitações',
+          required: false
+        }
+      ],
+      responses: {
+        200: {
+          description: 'Lista de solicitações de doação',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number', example: 1 },
+                    productId: { type: 'number', example: 1 },
+                    ongId: { type: 'number', example: 1 },
+                    quantity: { type: 'number', example: 10 },
+                    measure: { 
+                      type: 'string',
+                      enum: Object.values(Measure),
+                      example: Measure.KILOGRAMA
+                    },
+                    invoiceUrl: { type: 'string', nullable: true, example: null },
+                    acceptedAt: { type: 'string', nullable: true, example: null },
+                    sentAt: { type: 'string', nullable: true, example: null },
+                    deliveredAt: { type: 'string', nullable: true, example: null },
+                    completed: { type: 'boolean', example: false },
+                    productTitle: { type: 'string', example: 'Arroz' },
+                    donorName: { type: 'string', example: 'Fazenda São João' },
+                    donorCnpj: { type: 'string', example: '12345678000190' },
+                    ongName: { type: 'string', example: 'ONG Alimentar' },
+                    ongCnpj: { type: 'string', example: '98765432000190' }
+                  }
+                }
+              }
+            }
+          }
+        },
+        400: {
+          description: 'Erro na validação dos filtros',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  error: { type: 'string', example: 'Erro de validação' }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }; 

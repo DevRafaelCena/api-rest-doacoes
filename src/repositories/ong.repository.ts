@@ -8,6 +8,7 @@ export interface IOngRepository {
   updateOng(ong: OngEntity): Promise<OngEntity>;
   findOngById(id: number): Promise<OngEntity | undefined>;
   findOngByUserId(userId: number): Promise<OngEntity | undefined>;
+  updateOngAddressId(userId: number, addressId: number): Promise<void>;
 }
 
 export class OngRepository implements IOngRepository {
@@ -66,5 +67,11 @@ export class OngRepository implements IOngRepository {
       .first();
 
     return ong ? toCamelCase<OngEntity>(ong) : undefined;
+  }
+
+  async updateOngAddressId(userId: number, addressId: number): Promise<void> {
+    await this.knex<OngEntity>(this.tableName)
+      .update(toSnakeCase({ addressId }))
+      .where('user_id', userId);
   }
 }

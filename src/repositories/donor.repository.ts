@@ -8,6 +8,7 @@ export interface IDonorRepository {
   updateDonor(donor: DonorEntity): Promise<DonorEntity>;
   findDonorById(id: number): Promise<DonorEntity | undefined>;
   findDonorByUserId(userId: number): Promise<DonorEntity | undefined>;
+  updateDonorAddressId(userId: number, addressId: number): Promise<void>;
 }
 
 export class DonorRepository implements IDonorRepository {
@@ -63,5 +64,11 @@ export class DonorRepository implements IDonorRepository {
       .first();
 
     return user ? toCamelCase<DonorEntity>(user) : undefined;
+  }
+
+  async updateDonorAddressId(userId: number, addressId: number): Promise<void> {
+    await this.knex<DonorEntity>(this.tableName)
+      .update(toSnakeCase({ addressId }))
+      .where('user_id', userId);
   }
 }

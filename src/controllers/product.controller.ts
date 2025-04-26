@@ -103,4 +103,20 @@ export class ProductController {
       return res.status(400).json({ error: error.message });
     }
   }
+
+  async getDonorProducts(req: Request, res: Response): Promise<Response> {
+    try {
+      const { donorId } = req.params;
+      const id = Number(donorId);
+
+      if (isNaN(id)) {
+        throw new AppError('ID do doador inválido', 400);
+      }
+
+      const products = await this.productRepository.findDonorProducts(id);
+      return res.json(products);
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
 }

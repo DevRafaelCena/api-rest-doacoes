@@ -14,6 +14,7 @@ export interface IProductRepository {
   deleteProduct(id: number): Promise<void>;
   updateUnavailableQuantity(productId: number, quantity: number): Promise<void>;
   findProductDetails(id: number): Promise<any>;
+  findDonorProducts(donorId: number): Promise<any[]>;
 }
 
 export class ProductRepository implements IProductRepository {
@@ -113,7 +114,7 @@ export class ProductRepository implements IProductRepository {
         'a.complement as donor_complement',
         'a.cep as donor_cep',
         'a.city as donor_city',
-        'a.state as donor_state'
+        'a.state as donor_state',
       )
       .from(`${this.tableName} as p`)
       .join('tb_donor as d', 'p.donor_id', 'd.id')
@@ -124,28 +125,53 @@ export class ProductRepository implements IProductRepository {
     if (!product) return undefined;
 
     const availableQuantity = product.quantity - (product.unavailable_quantity || 0);
-    
-    const { 
-      donor_name, donor_cnpj, 
-      donor_street, donor_number, donor_complement, donor_cep, donor_city, donor_state,
-      ...productData 
+
+    const {
+      donor_name,
+      donor_cnpj,
+      donor_street,
+      donor_number,
+      donor_complement,
+      donor_cep,
+      donor_city,
+      donor_state,
+      ...productData
     } = product;
-    
+
     return {
       ...toCamelCase(productData),
       availableQuantity,
       donor: {
         name: donor_name,
         cnpj: donor_cnpj,
-        address: donor_street ? {
-          street: donor_street,
-          number: donor_number,
-          complement: donor_complement,
-          cep: donor_cep,
-          city: donor_city,
-          state: donor_state
-        } : null
-      }
+        address: donor_street
+          ? {
+              street: donor_street,
+              number: donor_number,
+              complement: donor_complement,
+              cep: donor_cep,
+              city: donor_city,
+              state: donor_state,
+            }
+          : null,
+      },
     };
+  }
+
+  async findDonorProducts(donorId: number): Promise<any[]> {
+    const products = await this.knex(this.tableName)
+      .select('p.*', this.knex.raw('COUNT(d.id) as donation_requests_count'))
+      .from(`${this.tableName} as p`)
+      .leftJoin('tb_donation as d', function () {
+        this.on('p.id', '=', 'd.product_id').andOn('d.completed', '=', 'false');
+      })
+      .where('p.donor_id', donorId)
+      .groupBy('p.id');
+
+    return products.map((product) => ({
+      ...toCamelCase(product),
+      availableQuantity: product.quantity - (product.unavailable_quantity || 0),
+      hasDonationRequests: product.donation_requests_count > 0,
+    }));
   }
 }

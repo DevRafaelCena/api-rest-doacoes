@@ -340,5 +340,64 @@ export const productDocs = {
         }
       }
     }
+  },
+  '/products/donor/{donorId}': {
+    get: {
+      summary: 'Lista produtos cadastrados por um doador',
+      tags: ['Product'],
+      parameters: [
+        {
+          in: 'path',
+          name: 'donorId',
+          schema: { type: 'number' },
+          required: true,
+          description: 'ID do doador'
+        }
+      ],
+      responses: {
+        200: {
+          description: 'Lista de produtos do doador',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number', example: 1 },
+                    donorId: { type: 'number', example: 1 },
+                    categoryId: { type: 'number', example: 1 },
+                    title: { type: 'string', example: 'Arroz' },
+                    description: { type: 'string', example: 'Arroz branco tipo 1' },
+                    quantity: { type: 'number', example: 10 },
+                    measure: { 
+                      type: 'string',
+                      enum: Object.values(Measure),
+                      example: Measure.KILOGRAMA
+                    },
+                    registeredAt: { type: 'string', example: '2024-04-01T12:00:00.000Z' },
+                    availableQuantity: { type: 'number', example: 8 },
+                    hasDonationRequests: { type: 'boolean', example: true }
+                  }
+                }
+              }
+            }
+          }
+        },
+        400: {
+          description: 'ID do doador inválido',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: { type: 'string', example: 'ID do doador inválido' }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }; 

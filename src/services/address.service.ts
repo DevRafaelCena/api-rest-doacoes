@@ -37,7 +37,7 @@ export class AddressService {
       ...data,
     });
 
-    let address;
+    let address: AddressEntity;
 
     if (userRole.addressId) {
       address = await this.addressRepository.updateAddress(addressEntity);
@@ -45,6 +45,17 @@ export class AddressService {
       address = await this.addressRepository.createAddress(addressEntity);
 
       if (!address) throw new AppError('Address not created', 500);
+
+      // Atualiza o addressId na tabela correspondente
+      const updateHandlers = {
+        [UserRole.DONOR]: () =>
+          this.donorRepository.updateDonorAddressId(user.id as number, address.id!),
+        [UserRole.TRANSPORTER]: () =>
+          this.transporterRepository.updateTransporterAddressId(user.id as number, address.id!),
+        [UserRole.ONG]: () => this.ongRepository.updateOngAddressId(user.id as number, address.id!),
+      };
+
+      await updateHandlers[user.role]?.();
     }
 
     return address;

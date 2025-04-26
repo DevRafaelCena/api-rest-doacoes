@@ -8,6 +8,7 @@ export interface ITransporterRepository {
   updateTransporter(transporter: TransporterEntity): Promise<TransporterEntity>;
   findTransporterById(id: number): Promise<TransporterEntity | undefined>;
   findTransporterByUserId(userId: number): Promise<TransporterEntity | undefined>;
+  updateTransporterAddressId(userId: number, addressId: number): Promise<void>;
 }
 
 export class TransporterRepository implements ITransporterRepository {
@@ -70,5 +71,11 @@ export class TransporterRepository implements ITransporterRepository {
       .first();
 
     return transporter ? toCamelCase<TransporterEntity>(transporter) : undefined;
+  }
+
+  async updateTransporterAddressId(userId: number, addressId: number): Promise<void> {
+    await this.knex<TransporterEntity>(this.tableName)
+      .update(toSnakeCase({ addressId }))
+      .where('user_id', userId);
   }
 }

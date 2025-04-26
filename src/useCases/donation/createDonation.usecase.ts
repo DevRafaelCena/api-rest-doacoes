@@ -6,10 +6,14 @@ import { AppError } from '@/errors/AppError';
 export class CreateDonationUseCase {
   constructor(
     private donationRepository: DonationRepository,
-    private productRepository: ProductRepository
+    private productRepository: ProductRepository,
   ) {}
 
   async execute(donation: DonationEntity): Promise<DonationEntity> {
+    if (!donation.productId || isNaN(donation.productId)) {
+      throw new AppError('ID do produto inválido', 400);
+    }
+
     const product = await this.productRepository.findProductById(donation.productId);
 
     if (!product) {
@@ -21,9 +25,12 @@ export class CreateDonationUseCase {
     }
 
     const availableQuantity = product.quantity - product.unavailableQuantity;
-    
+
     if (donation.quantity > availableQuantity) {
-      throw new AppError(`Quantidade solicitada (${donation.quantity}) é maior que a quantidade disponível (${availableQuantity})`, 400);
+      throw new AppError(
+        `Quantidade solicitada (${donation.quantity}) é maior que a quantidade disponível (${availableQuantity})`,
+        400,
+      );
     }
 
     // Atualiza a quantidade indisponível do produto
