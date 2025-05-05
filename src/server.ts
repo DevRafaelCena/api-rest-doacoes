@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { errorHandler } from './middlewares/errorHandler';
 import routes from './routes/index.routes';
 import { setupSwagger } from './config/swagger';
@@ -9,6 +10,7 @@ dotenv.config();
 
 setupSwagger(app);
 
+app.use(cors());
 app.use(express.json());
 app.use(routes);
 
