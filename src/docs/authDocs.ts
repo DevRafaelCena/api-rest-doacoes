@@ -45,11 +45,11 @@ export const authDocs = {
                     properties: {
                       id: {
                         type: 'number',
-                        example: 1,
+                        example: 32,
                       },
                       username: {
                         type: 'string',
-                        example: 'usuario123',
+                        example: 'donor_hope',
                       },
                       role: {
                         type: 'string',
@@ -57,77 +57,20 @@ export const authDocs = {
                       },
                       donorId: {
                         type: 'number',
-                        example: 1,
-                      },
-                      ongId: {
-                        type: 'number',
-                        example: 1,
-                      },
-                      transporterId: {
-                        type: 'number',
-                        example: 1,
+                        example: 3,
                       },
                       name: {
                         type: 'string',
-                        example: 'Nome da Empresa',
+                        example: 'Hope Donor',
                       },
                       cnpj: {
                         type: 'string',
-                        example: '12345678901234',
-                      },
-                      cpf: {
-                        type: 'string',
-                        example: '12345678901',
-                      },
-                      capacity: {
-                        type: 'number',
-                        example: 1000,
-                      },
-                      measure: {
-                        type: 'string',
-                        example: 'kg',
+                        example: '98765432000110',
                       },
                       registeredAt: {
                         type: 'string',
-                        format: 'date',
-                        example: '2024-03-20',
-                      },
-                      address: {
-                        type: 'object',
-                        properties: {
-                          id: {
-                            type: 'number',
-                            example: 1,
-                          },
-                          street: {
-                            type: 'string',
-                            example: 'Rua Exemplo',
-                          },
-                          number: {
-                            type: 'string',
-                            example: '123',
-                          },
-                          complement: {
-                            type: 'string',
-                            example: 'Sala 1',
-                          },
-                          neighborhood: {
-                            type: 'string',
-                            example: 'Centro',
-                          },
-                          city: {
-                            type: 'string',
-                            example: 'São Paulo',
-                          },
-                          state: {
-                            type: 'string',
-                            example: 'SP',
-                          },
-                          zipCode: {
-                            type: 'string',
-                            example: '01234567',
-                          },
-                        },
+                        format: 'date-time',
+                        example: '2025-04-01T00:00:00.000Z',
                       },
                     },
                   },
@@ -170,11 +113,11 @@ export const authDocs = {
                 properties: {
                   id: {
                     type: 'number',
-                    example: 1,
+                    example: 32,
                   },
                   username: {
                     type: 'string',
-                    example: 'usuario123',
+                    example: 'donor_hope',
                   },
                   role: {
                     type: 'string',
@@ -182,77 +125,20 @@ export const authDocs = {
                   },
                   donorId: {
                     type: 'number',
-                    example: 1,
-                  },
-                  ongId: {
-                    type: 'number',
-                    example: 1,
-                  },
-                  transporterId: {
-                    type: 'number',
-                    example: 1,
+                    example: 3,
                   },
                   name: {
                     type: 'string',
-                    example: 'Nome da Empresa',
+                    example: 'Hope Donor',
                   },
                   cnpj: {
                     type: 'string',
-                    example: '12345678901234',
-                  },
-                  cpf: {
-                    type: 'string',
-                    example: '12345678901',
-                  },
-                  capacity: {
-                    type: 'number',
-                    example: 1000,
-                  },
-                  measure: {
-                    type: 'string',
-                    example: 'kg',
+                    example: '98765432000110',
                   },
                   registeredAt: {
                     type: 'string',
-                    format: 'date',
-                    example: '2024-03-20',
-                  },
-                  address: {
-                    type: 'object',
-                    properties: {
-                      id: {
-                        type: 'number',
-                        example: 1,
-                      },
-                      street: {
-                        type: 'string',
-                        example: 'Rua Exemplo',
-                      },
-                      number: {
-                        type: 'string',
-                        example: '123',
-                      },
-                      complement: {
-                        type: 'string',
-                        example: 'Sala 1',
-                      },
-                      neighborhood: {
-                        type: 'string',
-                        example: 'Centro',
-                      },
-                      city: {
-                        type: 'string',
-                        example: 'São Paulo',
-                      },
-                      state: {
-                        type: 'string',
-                        example: 'SP',
-                      },
-                      zipCode: {
-                        type: 'string',
-                        example: '01234567',
-                      },
-                    },
+                    format: 'date-time',
+                    example: '2025-04-01T00:00:00.000Z',
                   },
                 },
               },
