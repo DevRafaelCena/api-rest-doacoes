@@ -37,6 +37,6 @@ router.get('/details/:id', productController.getProductDetails.bind(productContr
 
 router.get('/:id', productController.findById.bind(productController));
 
-router.get('/donor/:donorId', productController.getDonorProducts.bind(productController));
+//router.get('/donations/:donorId', productController.getDonorProducts.bind(productController));
 
 export const productRoutes = router;

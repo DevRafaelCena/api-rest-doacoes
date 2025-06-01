@@ -2,13 +2,18 @@ import { Request, Response } from 'express';
 import { CreateDonationUseCase } from '@/useCases/donation/createDonation.usecase';
 import { ListDonationsUseCase } from '@/useCases/donation/listDonations.usecase';
 import { ListDonationRequestsUseCase } from '@/useCases/donation/listDonationRequests.usecase';
+import { AcceptDonationUseCase } from '@/useCases/donation/acceptDonation.usecase';
 import DonationEntity from '@/entities/donation.entity';
+import { ProductRepository } from '@/repositories/product.repository';
+import { AppError } from '@/@errors/AppError';
 
 export class DonationController {
   constructor(
     private createDonationUseCase: CreateDonationUseCase,
     private listDonationsUseCase: ListDonationsUseCase,
     private listDonationRequestsUseCase: ListDonationRequestsUseCase,
+    private acceptDonationUseCase: AcceptDonationUseCase,
+    private productRepository: ProductRepository,
   ) {}
 
   async create(req: Request, res: Response): Promise<Response> {
@@ -33,6 +38,7 @@ export class DonationController {
 
   async list(req: Request, res: Response): Promise<Response> {
     try {
+      console.log('req.query');
       const { productId, ongId } = req.query;
 
       const filters = {
@@ -50,6 +56,7 @@ export class DonationController {
 
   async listDonationRequests(req: Request, res: Response): Promise<Response> {
     try {
+      console.log('req.query');
       const { donorId, ongId } = req.query;
 
       const filters = {
@@ -61,6 +68,39 @@ export class DonationController {
       return res.json(donations);
     } catch (error: any) {
       return res.status(400).json({ error: error.message });
+    }
+  }
+
+  async listDonations(req: Request, res: Response): Promise<Response> {
+    try {
+      const { donorId } = req.query;  
+      
+      if (!donorId) {
+        throw new AppError('ID do doador é obrigatório', 400);
+      }
+
+      const id = Number(donorId);
+
+      const products = await this.productRepository.findDonorProducts(id);
+      return res.json(products);
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
+  async acceptDonation(req: Request, res: Response): Promise<Response> {
+    try {
+      const { donationId } = req.query;
+      const id = Number(donationId);
+
+      if (isNaN(id)) {
+        throw new AppError('ID da doação inválido', 400);
+      }
+
+      const updatedDonation = await this.acceptDonationUseCase.execute(id);
+      return res.json(updatedDonation);
+    } catch (error: any) {
+      return res.status(error.statusCode || 400).json({ error: error.message });
     }
   }
 }

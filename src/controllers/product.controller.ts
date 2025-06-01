@@ -109,8 +109,11 @@ export class ProductController {
 
   async getDonorProducts(req: Request, res: Response): Promise<Response> {
     try {
+      console.log('req.query');
       const { donorId } = req.params;
-      
+
+      console.log('donorId', donorId);
+
       const id = Number(donorId);
 
       if (isNaN(id)) {
@@ -120,6 +123,7 @@ export class ProductController {
       const products = await this.productRepository.findDonorProducts(id);
       return res.json(products);
     } catch (error: any) {
+      console.log('error', error);
       return res.status(400).json({ error: error.message });
     }
   }
