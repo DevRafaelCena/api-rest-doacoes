@@ -41,6 +41,7 @@ export class ProductController {
       const filters: ListProductsFilters = {
         categoryId: req.query.categoryId ? Number(req.query.categoryId) : undefined,
         title: req.query.title as string | undefined,
+        donorId: req.query.donorId ? Number(req.query.donorId) : undefined,
       };
 
       const products = await this.listProductsUseCase.execute(filters);

@@ -4,6 +4,7 @@ import { ProductEntity } from '@/entities/product.entity';
 export interface ListProductsFilters {
   categoryId?: number;
   title?: string;
+  donorId?: number;
 }
 
 export class ListProductsUseCase {

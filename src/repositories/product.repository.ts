@@ -70,6 +70,7 @@ export class ProductRepository implements IProductRepository {
   async findAvailableProducts(filters?: {
     categoryId?: number;
     title?: string;
+    donorId?: number;
   }): Promise<ProductEntity[]> {
     console.log('listar produtos disponíveis');
 
@@ -83,6 +84,10 @@ export class ProductRepository implements IProductRepository {
 
     if (filters?.title) {
       query = query.where('title', 'like', `%${filters.title}%`);
+    }
+
+    if (filters?.donorId) {
+      query = query.where('donor_id', filters.donorId);
     }
 
     const products = await query;
