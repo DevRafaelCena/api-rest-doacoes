@@ -165,18 +165,71 @@ export class ProductRepository implements IProductRepository {
 
   async findDonorProducts(donorId: number): Promise<any[]> {
     const products = await this.knex(this.tableName)
-      .select('p.*', this.knex.raw('COUNT(d.id) as donation_requests_count'))
+      .select(
+        'd.id as donation_id',
+        'p.id as id_product',
+        'p.title',
+        'p.description',
+        'p.quantity as product_quantity',
+        'p.measure as product_measure',
+        'd.quantity as requested_quantity',
+        'd.measure as requested_measure',
+        'd.created_at as requested_at',
+        'd.invoice_url',
+        'd.accepted_at',
+        'd.sent_at',
+        'd.delivered_at',
+        'd.completed',
+        'o.id as ong_id',
+        'o.name as ong_name',
+        'o.cnpj as ong_cnpj',
+        'o.registered_at as ong_registered_at',
+        'a.street as ong_street',
+        'a.number as ong_number',
+        'a.complement as ong_complement',
+        'a.cep as ong_cep',
+        'a.city as ong_city',
+        'a.state as ong_state',
+        this.knex.raw('COUNT(d.id) as donation_requests_count')
+      )
       .from(`${this.tableName} as p`)
-      .leftJoin('tb_donation as d', function () {
-        this.on('p.id', '=', 'd.product_id').andOn('d.completed', '=', 'false');
-      })
+      .leftJoin('tb_donation as d', 'p.id', 'd.product_id')
+      .leftJoin('tb_ong as o', 'd.ong_id', 'o.id')
+      .leftJoin('tb_address as a', 'o.address_id', 'a.id')
       .where('p.donor_id', donorId)
-      .groupBy('p.id');
+      .where('d.completed', false)
+      .groupBy('p.id', 'd.id', 'o.id', 'a.id');
 
     return products.map((product) => ({
-      ...toCamelCase(product),
-      availableQuantity: product.quantity - (product.unavailable_quantity || 0),
-      hasDonationRequests: product.donation_requests_count > 0,
+      donationId: product.donation_id,
+      idProduct: product.id_product,
+      title: product.title,
+      description: product.description,
+      productQuantity: product.product_quantity,
+      productMeasure: product.product_measure,
+      requestedQuantity: product.requested_quantity,
+      requestedMeasure: product.requested_measure,
+      requestedAt: product.requested_at,
+      invoiceUrl: product.invoice_url,
+      acceptedAt: product.accepted_at,
+      sentAt: product.sent_at,
+      deliveredAt: product.delivered_at,
+      completed: product.completed,
+      ong: {
+        id: product.ong_id,
+        name: product.ong_name,
+        cnpj: product.ong_cnpj,
+        registeredAt: product.ong_registered_at,
+        address: product.ong_street ? {
+          street: product.ong_street,
+          number: product.ong_number,
+          complement: product.ong_complement,
+          cep: product.ong_cep,
+          city: product.ong_city,
+          state: product.ong_state
+        } : null
+      },
+      hasDonationRequests: product.donation_requests_count > 0
     }));
   }
 }

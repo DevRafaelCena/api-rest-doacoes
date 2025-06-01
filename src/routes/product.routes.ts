@@ -31,8 +31,10 @@ router.put('/:id', productController.update.bind(productController));
 
 router.get('/', productController.list.bind(productController));
 
-router.get('/available', productController.listAvailableProducts.bind(productController));
+//router.get('/available', productController.listAvailableProducts.bind(productController));
+
 router.get('/details/:id', productController.getProductDetails.bind(productController));
+
 router.get('/:id', productController.findById.bind(productController));
 
 router.get('/donor/:donorId', productController.getDonorProducts.bind(productController));

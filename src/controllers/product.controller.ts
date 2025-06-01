@@ -110,6 +110,7 @@ export class ProductController {
   async getDonorProducts(req: Request, res: Response): Promise<Response> {
     try {
       const { donorId } = req.params;
+      
       const id = Number(donorId);
 
       if (isNaN(id)) {
