@@ -3,6 +3,7 @@ import { CreateDonationUseCase } from '@/useCases/donation/createDonation.usecas
 import { ListDonationsUseCase } from '@/useCases/donation/listDonations.usecase';
 import { ListDonationRequestsUseCase } from '@/useCases/donation/listDonationRequests.usecase';
 import { AcceptDonationUseCase } from '@/useCases/donation/acceptDonation.usecase';
+import { UpdateSentAtUseCase } from '@/useCases/donation/updateSentAt.usecase';
 import DonationEntity from '@/entities/donation.entity';
 import { ProductRepository } from '@/repositories/product.repository';
 import { AppError } from '@/@errors/AppError';
@@ -13,6 +14,7 @@ export class DonationController {
     private listDonationsUseCase: ListDonationsUseCase,
     private listDonationRequestsUseCase: ListDonationRequestsUseCase,
     private acceptDonationUseCase: AcceptDonationUseCase,
+    private updateSentAtUseCase: UpdateSentAtUseCase,
     private productRepository: ProductRepository,
   ) {}
 
@@ -98,6 +100,22 @@ export class DonationController {
       }
 
       const updatedDonation = await this.acceptDonationUseCase.execute(id);
+      return res.json(updatedDonation);
+    } catch (error: any) {
+      return res.status(error.statusCode || 400).json({ error: error.message });
+    }
+  }
+
+  async updateSentAt(req: Request, res: Response): Promise<Response> {
+    try {
+      const { donationId } = req.query;
+      const id = Number(donationId);
+
+      if (isNaN(id)) {
+        throw new AppError('ID da doação inválido', 400);
+      }
+
+      const updatedDonation = await this.updateSentAtUseCase.execute(id);
       return res.json(updatedDonation);
     } catch (error: any) {
       return res.status(error.statusCode || 400).json({ error: error.message });

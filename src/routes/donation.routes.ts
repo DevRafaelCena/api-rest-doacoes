@@ -4,6 +4,7 @@ import { CreateDonationUseCase } from '@/useCases/donation/createDonation.usecas
 import { ListDonationsUseCase } from '@/useCases/donation/listDonations.usecase';
 import { ListDonationRequestsUseCase } from '@/useCases/donation/listDonationRequests.usecase';
 import { AcceptDonationUseCase } from '@/useCases/donation/acceptDonation.usecase';
+import { UpdateSentAtUseCase } from '@/useCases/donation/updateSentAt.usecase';
 import { DonationRepository } from '@/repositories/donation.repository';
 import { ProductRepository } from '@/repositories/product.repository';
 import knex from '@/config/database';
@@ -18,12 +19,14 @@ const createDonationUseCase = new CreateDonationUseCase(donationRepository, prod
 const listDonationsUseCase = new ListDonationsUseCase(donationRepository);
 const listDonationRequestsUseCase = new ListDonationRequestsUseCase(donationRepository);
 const acceptDonationUseCase = new AcceptDonationUseCase(donationRepository, productRepository);
+const updateSentAtUseCase = new UpdateSentAtUseCase(donationRepository);
 
 const donationController = new DonationController(
   createDonationUseCase,
   listDonationsUseCase,
   listDonationRequestsUseCase,
   acceptDonationUseCase,
+  updateSentAtUseCase,
   productRepository
 );
 
@@ -38,8 +41,10 @@ router.get('/', donationController.list.bind(donationController));
 // Rota para listar solicitações de doação
 router.get('/requests', donationController.listDonationRequests.bind(donationController));
 
-router.get('/donor', donationController.listDonations.bind(donationController));
+router.get('/by-donor', donationController.listDonations.bind(donationController));
 
 router.put('/accept', donationController.acceptDonation.bind(donationController));
+
+router.put('/sent', donationController.updateSentAt.bind(donationController));
 
 export const donationRoutes = router;
