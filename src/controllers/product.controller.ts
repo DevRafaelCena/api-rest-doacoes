@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { CreateProductUseCase } from '@/useCases/product/createProduct.usecase';
 import { ListProductsUseCase, ListProductsFilters } from '@/useCases/product/listProducts.usecase';
 import { FindProductByIdUseCase } from '@/useCases/product/findProductById.usecase';
+import { UpdateProductUseCase } from '@/useCases/product/updateProduct.usecase';
 import { createProductSchema } from '@/dtos/createProductDto';
 import { z } from 'zod';
 import { ProductRepository } from '@/repositories/product.repository';
@@ -12,6 +13,7 @@ export class ProductController {
     private readonly createProductUseCase: CreateProductUseCase,
     private readonly listProductsUseCase: ListProductsUseCase,
     private readonly findProductByIdUseCase: FindProductByIdUseCase,
+    private readonly updateProductUseCase: UpdateProductUseCase,
     private productRepository: ProductRepository,
   ) {}
 
@@ -117,6 +119,32 @@ export class ProductController {
       return res.json(products);
     } catch (error: any) {
       return res.status(400).json({ error: error.message });
+    }
+  }
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const productId = Number(id);
+
+      if (isNaN(productId)) {
+        throw new AppError('ID do produto inválido', 400);
+      }
+
+      const validatedData = createProductSchema.partial().parse(req.body);
+
+      const updatedProduct = await this.updateProductUseCase.execute(productId, validatedData);
+
+      return res.json(updatedProduct);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(422).json({
+          message: 'Erro de validação',
+          errors: error.errors,
+        });
+      }
+
+      next(error);
     }
   }
 }
