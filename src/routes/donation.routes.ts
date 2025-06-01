@@ -5,6 +5,7 @@ import { ListDonationsUseCase } from '@/useCases/donation/listDonations.usecase'
 import { ListDonationRequestsUseCase } from '@/useCases/donation/listDonationRequests.usecase';
 import { AcceptDonationUseCase } from '@/useCases/donation/acceptDonation.usecase';
 import { UpdateSentAtUseCase } from '@/useCases/donation/updateSentAt.usecase';
+import { CompleteDonationUseCase } from '@/useCases/donation/completeDonation.usecase';
 import { DonationRepository } from '@/repositories/donation.repository';
 import { ProductRepository } from '@/repositories/product.repository';
 import knex from '@/config/database';
@@ -20,6 +21,7 @@ const listDonationsUseCase = new ListDonationsUseCase(donationRepository);
 const listDonationRequestsUseCase = new ListDonationRequestsUseCase(donationRepository);
 const acceptDonationUseCase = new AcceptDonationUseCase(donationRepository, productRepository);
 const updateSentAtUseCase = new UpdateSentAtUseCase(donationRepository);
+const completeDonationUseCase = new CompleteDonationUseCase(donationRepository);
 
 const donationController = new DonationController(
   createDonationUseCase,
@@ -27,6 +29,7 @@ const donationController = new DonationController(
   listDonationRequestsUseCase,
   acceptDonationUseCase,
   updateSentAtUseCase,
+  completeDonationUseCase,
   productRepository
 );
 
@@ -46,5 +49,7 @@ router.get('/by-donor', donationController.listDonations.bind(donationController
 router.put('/accept', donationController.acceptDonation.bind(donationController));
 
 router.put('/sent', donationController.updateSentAt.bind(donationController));
+
+router.put('/complete', donationController.completeDonation.bind(donationController));
 
 export const donationRoutes = router;
