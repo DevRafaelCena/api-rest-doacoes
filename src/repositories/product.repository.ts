@@ -74,24 +74,41 @@ export class ProductRepository implements IProductRepository {
   }): Promise<ProductEntity[]> {
     console.log('listar produtos disponíveis');
 
-    let query = this.knex<ProductEntity>(this.tableName)
-      .select('*')
-      .whereRaw('quantity - unavailable_quantity > 0');
+    let query = this.knex(this.tableName)
+      .select(
+        'p.*',
+        'd.name as donor_name',
+        'd.cnpj as donor_cnpj',
+        this.knex.raw('(p.quantity - COALESCE(p.unavailable_quantity, 0)) as available_quantity')
+      )
+      .from(`${this.tableName} as p`)
+      .join('tb_donor as d', 'p.donor_id', 'd.id')
+      .whereRaw('p.quantity - COALESCE(p.unavailable_quantity, 0) > 0');
 
     if (filters?.categoryId) {
-      query = query.where('category_id', filters.categoryId);
+      query = query.where('p.category_id', filters.categoryId);
     }
 
     if (filters?.title) {
-      query = query.where('title', 'like', `%${filters.title}%`);
+      query = query.where('p.title', 'like', `%${filters.title}%`);
     }
 
     if (filters?.donorId) {
-      query = query.where('donor_id', filters.donorId);
+      query = query.where('p.donor_id', filters.donorId);
     }
 
     const products = await query;
-    return products.map((product) => toCamelCase<ProductEntity>(product));
+    return products.map((product) => {
+      const { donor_name, donor_cnpj, ...productData } = product;
+      return {
+        ...toCamelCase<ProductEntity>(productData),
+        availableQuantity: Number(product.available_quantity),
+        donor: {
+          name: donor_name,
+          cnpj: donor_cnpj
+        }
+      };
+    });
   }
 
   async deleteProduct(id: number): Promise<void> {
