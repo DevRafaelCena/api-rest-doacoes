@@ -12,6 +12,9 @@ export default class DonationEntity implements IDonation {
   sentAt?: Date;
   deliveredAt?: Date;
   completed: boolean;
+  transporterId?: number;
+  pickedUpAt?: Date;
+  deliveredByTransporterAt?: Date;
 
   constructor({
     id,
@@ -23,8 +26,11 @@ export default class DonationEntity implements IDonation {
     acceptedAt,
     sentAt,
     deliveredAt,
-    completed
-  }: IDonation) {
+    completed,
+    transporterId,
+    pickedUpAt,
+    deliveredByTransporterAt
+  }: IDonation & { transporterId?: number; pickedUpAt?: Date; deliveredByTransporterAt?: Date }) {
     this.id = id;
     this.productId = productId;
     this.ongId = ongId;
@@ -35,5 +41,8 @@ export default class DonationEntity implements IDonation {
     this.sentAt = sentAt;
     this.deliveredAt = deliveredAt;
     this.completed = completed;
+    this.transporterId = transporterId;
+    this.pickedUpAt = pickedUpAt;
+    this.deliveredByTransporterAt = deliveredByTransporterAt;
   } 
 } 

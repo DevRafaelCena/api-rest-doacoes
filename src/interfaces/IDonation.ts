@@ -11,4 +11,7 @@ export interface IDonation {
   sentAt?: Date;
   deliveredAt?: Date;
   completed: boolean;
+  transporterId?: number;
+  pickedUpAt?: Date;
+  deliveredByTransporterAt?: Date;
 } 
