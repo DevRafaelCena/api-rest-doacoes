@@ -119,4 +119,189 @@ export const userDocs = {
       },
     },
   },
+  '/transporter/available': {
+    get: {
+      summary: 'Lista doações disponíveis para transporte',
+      tags: ['Transporter'],
+      responses: {
+        200: {
+          description: 'Lista de doações disponíveis',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number', example: 12 },
+                    productId: { type: 'number', example: 22 },
+                    ongId: { type: 'number', example: 4 },
+                    quantity: { type: 'number', example: 2 },
+                    measure: { type: 'string', example: 'KG' },
+                    acceptedAt: { type: 'string', example: '2025-06-10T03:00:00.000Z' },
+                    sentAt: { type: 'string', example: '2025-06-10T03:00:00.000Z' },
+                    completed: { type: 'boolean', example: false },
+                    origin: {
+                      type: 'object',
+                      properties: {
+                        nome: { type: 'string', example: 'Roberto E Luciana Telecom Ltda' },
+                        origin: {
+                          type: 'object',
+                          properties: {
+                            street: { type: 'string', example: 'Rua X' },
+                            number: { type: 'string', example: '123' },
+                            complement: { type: 'string', example: null },
+                            cep: { type: 'string', example: '12345-678' },
+                            city: { type: 'string', example: 'São Paulo' },
+                            state: { type: 'string', example: 'SP' },
+                          },
+                        },
+                      },
+                    },
+                    destiny: {
+                      type: 'object',
+                      properties: {
+                        nome: { type: 'string', example: 'Ong Dev Soluttion' },
+                        endereco: {
+                          type: 'object',
+                          properties: {
+                            street: { type: 'string', example: 'Avenida Paulista 2' },
+                            number: { type: 'string', example: '1000' },
+                            complement: { type: 'string', example: 'Apto 202' },
+                            cep: { type: 'string', example: '01310000' },
+                            city: { type: 'string', example: 'São Paulo' },
+                            state: { type: 'string', example: 'SP' },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  '/transporter/in-progress': {
+    get: {
+      summary: 'Lista entregas em andamento do transportador',
+      tags: ['Transporter'],
+      responses: {
+        200: {
+          description: 'Lista de entregas em andamento',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/components/schemas/TransporterAvailable',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  '/transporter/accept/{id}': {
+    put: {
+      summary: 'Transportador aceita a entrega e se torna responsável',
+      tags: ['Transporter'],
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          required: true,
+          schema: { type: 'number' },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Doação atualizada',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/TransporterAvailable' },
+            },
+          },
+        },
+      },
+    },
+  },
+  '/transporter/complete/{id}': {
+    put: {
+      summary: 'Transportador marca a entrega como concluída',
+      tags: ['Transporter'],
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          required: true,
+          schema: { type: 'number' },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Entrega marcada como concluída',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/TransporterAvailable' },
+            },
+          },
+        },
+      },
+    },
+  },
+  components: {
+    schemas: {
+      TransporterAvailable: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 12 },
+          productId: { type: 'number', example: 22 },
+          ongId: { type: 'number', example: 4 },
+          quantity: { type: 'number', example: 2 },
+          measure: { type: 'string', example: 'KG' },
+          acceptedAt: { type: 'string', example: '2025-06-10T03:00:00.000Z' },
+          sentAt: { type: 'string', example: '2025-06-10T03:00:00.000Z' },
+          completed: { type: 'boolean', example: false },
+          origin: {
+            type: 'object',
+            properties: {
+              nome: { type: 'string', example: 'Roberto E Luciana Telecom Ltda' },
+              origin: {
+                type: 'object',
+                properties: {
+                  street: { type: 'string', example: 'Rua X' },
+                  number: { type: 'string', example: '123' },
+                  complement: { type: 'string', example: null },
+                  cep: { type: 'string', example: '12345-678' },
+                  city: { type: 'string', example: 'São Paulo' },
+                  state: { type: 'string', example: 'SP' },
+                },
+              },
+            },
+          },
+          destiny: {
+            type: 'object',
+            properties: {
+              nome: { type: 'string', example: 'Ong Dev Soluttion' },
+              endereco: {
+                type: 'object',
+                properties: {
+                  street: { type: 'string', example: 'Avenida Paulista 2' },
+                  number: { type: 'string', example: '1000' },
+                  complement: { type: 'string', example: 'Apto 202' },
+                  cep: { type: 'string', example: '01310000' },
+                  city: { type: 'string', example: 'São Paulo' },
+                  state: { type: 'string', example: 'SP' },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 };
