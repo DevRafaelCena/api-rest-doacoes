@@ -263,10 +263,10 @@ export class DonationRepository implements IDonationRepository {
     donationId: number,
     transporterId: number,
   ): Promise<DonationEntity | undefined> {
+    console.log('completing transport', donationId, transporterId);
     await this.knex<DonationEntity>(this.tableName)
       .update({ delivered_by_transporter_at: new Date() } as any)
       .where('id', donationId)
-      .andWhere('transporter_id', transporterId)
       .andWhere('completed', false);
     return this.findDonationById(donationId);
   }
